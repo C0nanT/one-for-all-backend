@@ -1,7 +1,8 @@
-.PHONY: sh-app sh-nginx sh-postgres sh fix-permissions up logs backup-db
+.PHONY: sh-app sh-nginx sh-postgres sh fix-permissions up logs backup-db restore-db
 
 # Diretório dos arquivos de backup (ex.: make backup-db BACKUP_DIR=/backups)
 BACKUP_DIR ?= $(CURDIR)/backups
+BACKUP_FILE ?= $(BACKUP_DIR)/backup-20260401-075752.dump
 
 # Corrige permissões de storage e bootstrap/cache (editável no host; aplicado também no entrypoint ao subir)
 fix-permissions:
@@ -34,4 +35,10 @@ backup-db:
 	@F="$(BACKUP_DIR)/backup-$$(date +%Y%m%d-%H%M%S).dump"; \
 	docker compose exec -T postgres sh -c 'pg_dump -Fc -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' > "$$F"; \
 	echo "Backup criado em $$F"
+
+# Restaura dump PostgreSQL no banco atual (ex.: make restore-db BACKUP_FILE=/caminho/arquivo.dump)
+restore-db:
+	@test -f "$(BACKUP_FILE)" || (echo "Arquivo de backup não encontrado: $(BACKUP_FILE)"; exit 1)
+	docker compose exec -T postgres sh -c 'pg_restore --clean --if-exists --no-owner --no-privileges -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' < "$(BACKUP_FILE)"
+	@echo "Banco restaurado com sucesso a partir de $(BACKUP_FILE)"
 
