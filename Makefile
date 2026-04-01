@@ -1,4 +1,7 @@
-.PHONY: sh-app sh-nginx sh-postgres sh fix-permissions up logs
+.PHONY: sh-app sh-nginx sh-postgres sh fix-permissions up logs backup-db
+
+# Diretório dos arquivos de backup (ex.: make backup-db BACKUP_DIR=/backups)
+BACKUP_DIR ?= $(CURDIR)/backups
 
 # Corrige permissões de storage e bootstrap/cache (editável no host; aplicado também no entrypoint ao subir)
 fix-permissions:
@@ -24,4 +27,11 @@ down:
 
 logs:
 	docker logs -f ai1-app
+
+# Dump do PostgreSQL via container (usa POSTGRES_* do .env do compose)
+backup-db:
+	mkdir -p $(BACKUP_DIR)
+	@F="$(BACKUP_DIR)/backup-$$(date +%Y%m%d-%H%M%S).dump"; \
+	docker compose exec -T postgres sh -c 'pg_dump -Fc -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' > "$$F"; \
+	echo "Backup criado em $$F"
 
