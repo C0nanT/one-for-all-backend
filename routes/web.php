@@ -3,5 +3,5 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return response()->json(['message' => 'All-in-One API']);
+    return response()->json(['message' => 'One-for-All API']);
 });

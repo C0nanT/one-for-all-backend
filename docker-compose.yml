@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: dockerfiles/php/Dockerfile
     image: app
-    container_name: ai1-app
+    container_name: ofa-app
     tty: true
     ports:
       - "9000:9000"
@@ -23,7 +23,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: ai1-nginx
+    container_name: ofa-nginx
     depends_on:
       - app
     ports:
@@ -42,7 +42,7 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    container_name: ai1-postgres
+    container_name: ofa-postgres
     restart: unless-stopped
     ports:
       - "5432:5432"

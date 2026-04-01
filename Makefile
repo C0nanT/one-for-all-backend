@@ -26,7 +26,7 @@ down:
 	docker compose down
 
 logs:
-	docker logs -f ai1-app
+	docker logs -f ofa-app
 
 # Dump do PostgreSQL via container (usa POSTGRES_* do .env do compose)
 backup-db:
