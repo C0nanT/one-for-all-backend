@@ -25,7 +25,16 @@ class PayableAccountRepository implements PayableAccountRepositoryInterface
             ->groupBy('payable_account_id', 'period');
 
         $query = PayableAccount::query()
-            ->orderByDesc('id')
+            ->orderByRaw(
+                'CASE WHEN EXISTS (
+                    SELECT 1 FROM payable_account_payments
+                    WHERE payable_account_id = payable_accounts.id
+                    AND period BETWEEN ? AND ?
+                    AND deleted_at IS NULL
+                ) THEN 1 ELSE 0 END',
+                [$start, $end]
+            )
+            ->orderBy('name')
             ->with([
                 'payments' => function (Relation $q) use ($latestPaymentIdSubquery, $start, $end): void {
                     $q->whereIn('id', $latestPaymentIdSubquery);

@@ -25,7 +25,7 @@ class AccountsSeeder extends Seeder
             'Internet Cell Conan',
             'Internet Cell Emilly',
             'Comida / Flash',
-            'Outros gastos',
+            'Outros gastos Emilly',
         ];
 
         $accountData = array_map(fn ($name) => ['name' => $name], $accounts);
