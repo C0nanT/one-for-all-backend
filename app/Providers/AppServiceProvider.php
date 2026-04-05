@@ -9,6 +9,8 @@ use Modules\PayableAccount\Contracts\Repositories\PayableAccountRepositoryInterf
 use Modules\PayableAccount\Models\PayableAccountPayment;
 use Modules\PayableAccount\Repositories\PayableAccountPaymentRepository;
 use Modules\PayableAccount\Repositories\PayableAccountRepository;
+use Modules\TransportCard\Contracts\Repositories\TransportCardBalanceRepositoryInterface;
+use Modules\TransportCard\Repositories\TransportCardBalanceRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             PayableAccountPaymentRepositoryInterface::class,
             PayableAccountPaymentRepository::class
+        );
+        $this->app->bind(
+            TransportCardBalanceRepositoryInterface::class,
+            TransportCardBalanceRepository::class
         );
     }
 

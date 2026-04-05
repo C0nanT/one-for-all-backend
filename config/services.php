@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'tacom' => [
+        'username' => env('TACOM_USERNAME'),
+        'password' => env('TACOM_PASSWORD'),
+        'card_number' => env('TACOM_CARD_NUMBER'),
+        'cpf' => env('TACOM_CPF'),
+    ],
+
 ];

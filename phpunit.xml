@@ -33,5 +33,9 @@
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         <env name="LOG_CHANNEL" value="stderr"/>
+        <env name="TACOM_USERNAME" value=""/>
+        <env name="TACOM_PASSWORD" value=""/>
+        <env name="TACOM_CARD_NUMBER" value=""/>
+        <env name="TACOM_CPF" value=""/>
     </php>
 </phpunit>
