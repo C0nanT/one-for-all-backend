@@ -76,6 +76,17 @@ Tests use SQLite in-memory and live in `tests/Feature/` (most tests are feature 
 - Every change must have a passing Pest test.
 - Run `vendor/bin/pint --dirty --format agent` before finishing any PHP work.
 
+## Module Context Files
+
+Each module has its own `CLAUDE.md` with domain-specific context: endpoints, models, services, conventions, and common pitfalls. **Before working on any module, read its CLAUDE.md first.**
+
+```
+modules/Auth/CLAUDE.md
+modules/User/CLAUDE.md
+modules/PayableAccount/CLAUDE.md
+modules/TransportCard/CLAUDE.md
+```
+
 ## Git Hooks
 
 - **Pre-commit**: PHP syntax check, blocks debug calls (`dd`, `dump`, `ray`, `var_dump`), runs Pint.
