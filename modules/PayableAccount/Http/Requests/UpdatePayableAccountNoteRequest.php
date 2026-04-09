@@ -1,0 +1,28 @@
+<?php
+
+namespace Modules\PayableAccount\Http\Requests;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdatePayableAccountNoteRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'payable_account_id' => ['sometimes', 'integer', 'exists:payable_accounts,id'],
+            'user_id' => ['sometimes', 'integer', 'exists:users,id'],
+            'text' => ['sometimes', 'string', 'max:1000'],
+            'amount' => ['sometimes', 'numeric', 'min:0'],
+            'date' => ['sometimes', 'date'],
+        ];
+    }
+}

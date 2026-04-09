@@ -258,3 +258,34 @@ test('can delete payable account', function (): void {
     $response->assertNoContent();
     $this->assertSoftDeleted('payable_accounts', ['id' => $payableAccount->id]);
 });
+
+test('index orders unpaid accounts first then alphabetically', function (): void {
+    $paidAccount = PayableAccount::factory()->create(['name' => 'Alpha']);
+    PayableAccount::factory()->create(['name' => 'Beta']);
+
+    PayableAccountPayment::query()->create([
+        'payable_account_id' => $paidAccount->id,
+        'amount' => 100,
+        'payer_id' => $this->user->id,
+        'period' => '2026-03-01',
+    ]);
+
+    $response = $this->getJson('/api/payable-accounts?period=2026-03');
+
+    $response->assertSuccessful();
+    expect($response->json('data.0.name'))->toBe('Beta')
+        ->and($response->json('data.1.name'))->toBe('Alpha');
+});
+
+test('index orders alphabetically within the same status', function (): void {
+    PayableAccount::factory()->create(['name' => 'Zebra']);
+    PayableAccount::factory()->create(['name' => 'Apple']);
+    PayableAccount::factory()->create(['name' => 'Mango']);
+
+    $response = $this->getJson('/api/payable-accounts?period=2026-03');
+
+    $response->assertSuccessful();
+    expect($response->json('data.0.name'))->toBe('Apple')
+        ->and($response->json('data.1.name'))->toBe('Mango')
+        ->and($response->json('data.2.name'))->toBe('Zebra');
+});

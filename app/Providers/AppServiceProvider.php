@@ -4,9 +4,12 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Modules\PayableAccount\Contracts\Repositories\PayableAccountNoteRepositoryInterface;
 use Modules\PayableAccount\Contracts\Repositories\PayableAccountPaymentRepositoryInterface;
 use Modules\PayableAccount\Contracts\Repositories\PayableAccountRepositoryInterface;
+use Modules\PayableAccount\Models\PayableAccountNote;
 use Modules\PayableAccount\Models\PayableAccountPayment;
+use Modules\PayableAccount\Repositories\PayableAccountNoteRepository;
 use Modules\PayableAccount\Repositories\PayableAccountPaymentRepository;
 use Modules\PayableAccount\Repositories\PayableAccountRepository;
 use Modules\TransportCard\Contracts\Repositories\TransportCardBalanceRepositoryInterface;
@@ -31,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
             TransportCardBalanceRepositoryInterface::class,
             TransportCardBalanceRepository::class
         );
+        $this->app->bind(
+            PayableAccountNoteRepositoryInterface::class,
+            PayableAccountNoteRepository::class
+        );
     }
 
     /**
@@ -39,5 +46,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Route::bind('payment', fn (string $value) => PayableAccountPayment::findOrFail($value));
+        Route::bind('note', fn (string $value) => PayableAccountNote::findOrFail($value));
     }
 }
