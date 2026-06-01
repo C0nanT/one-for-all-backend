@@ -18,6 +18,7 @@ class TransportCard extends Model
      */
     protected $fillable = [
         'name',
+        'description',
         'username',
         'password',
         'card_number',

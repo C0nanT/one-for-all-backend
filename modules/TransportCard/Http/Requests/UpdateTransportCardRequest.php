@@ -18,6 +18,7 @@ class UpdateTransportCardRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:80'],
+            'description' => ['sometimes', 'nullable', 'string', 'max:500'],
             'username' => ['sometimes', 'string', 'max:255'],
             'password' => ['sometimes', 'string', 'max:255'],
             'card_number' => ['sometimes', 'string', 'max:50'],

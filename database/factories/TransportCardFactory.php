@@ -21,6 +21,7 @@ class TransportCardFactory extends Factory
     {
         return [
             'name' => fake()->words(2, true),
+            'description' => fake()->optional()->sentence(),
             'username' => fake()->userName(),
             'password' => fake()->password(),
             'card_number' => fake()->numerify('##############'),

@@ -18,6 +18,7 @@ class TransportCardResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'description' => $this->description,
             'username' => $this->username,
             'card_number' => $this->card_number,
             'cpf' => $this->cpf,

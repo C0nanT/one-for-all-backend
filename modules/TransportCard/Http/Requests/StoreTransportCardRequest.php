@@ -18,6 +18,7 @@ class StoreTransportCardRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:80'],
+            'description' => ['nullable', 'string', 'max:500'],
             'username' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'max:255'],
             'card_number' => ['required', 'string', 'max:50'],
