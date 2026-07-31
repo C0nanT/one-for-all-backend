@@ -76,6 +76,41 @@ Tests use SQLite in-memory and live in `tests/Feature/` (most tests are feature 
 - Every change must have a passing Pest test.
 - Run `vendor/bin/pint --dirty --format agent` before finishing any PHP work.
 
+## SOLID
+
+Apply SOLID at the **architecture** level — module boundaries, dependency direction, and the interfaces between them. It is a way to shape seams, not a naming ritual. "Module" means whatever this codebase groups behaviour into: a class, a package, a file of functions, a service.
+
+### Scope — boy scout rule
+
+SOLID applies to:
+
+- code written new in the current change, and
+- the existing code the current flow already passes through, when a small local edit clears friction that change is hitting.
+
+The rest of the codebase stays as it is. Keep a change's blast radius on the flow being built or fixed — a repo-wide SOLID refactor is its own piece of work, and happens only when explicitly asked for. The codebase converges one change at a time.
+
+When applying a principle would require reshaping modules outside the current flow, leave them alone and say so in the summary of the change.
+
+### In this repo
+
+- **Policy** — `modules/*/Services/**` (business logic, e.g. `PayableAccountService`, `TransportCardService`)
+- **Details** — `modules/*/Repositories/**` (Eloquent persistence) and external-API adapters such as `modules/TransportCard/Services/TacomApiService.php`
+- **Wiring** — constructor-promoted interface type-hints in Services (`Modules\*\Contracts\Repositories\*Interface`), bound to their Eloquent implementations in `app/Providers/AppServiceProvider.php`
+- **Test substitution** — not currently used: Feature tests exercise the real Eloquent repository against SQLite in-memory rather than swapping the interface. Add a test double the first time a flow needs to isolate a Service from its repository.
+
+### The principles, as architecture rules
+
+- **SRP** — a module has one reason to change. When one flow forces edits in a module that other flows also own for unrelated reasons, that module is holding two responsibilities.
+- **OCP** — new behaviour arrives as a new implementation behind an existing interface, rather than another branch in a growing conditional over kinds of thing.
+- **LSP** — every implementation of an interface is substitutable through that interface: same contract, same error behaviour, no "this one also needs X called first".
+- **ISP** — a consumer depends on the narrow interface it actually uses. Interfaces are shaped by the caller's need, not by everything the implementation can do.
+- **DIP** — policy does not depend on details (see *In this repo* above for both). The interface belongs to the policy side; the detail implements it and is passed in.
+
+### Applying it
+
+- When a new flow crosses an IO boundary, define the interface from the policy side and inject the implementation.
+- One production implementation is enough **when a test substitutes it** — the test double is the second implementation, and the interface is the test surface. An adapter behind an interface with a single caller and no substitution is a hypothetical seam: drop the interface until something real needs it.
+
 ## Module Context Files
 
 Each module has its own `CLAUDE.md` with domain-specific context: endpoints, models, services, conventions, and common pitfalls. **Before working on any module, read its CLAUDE.md first.**
